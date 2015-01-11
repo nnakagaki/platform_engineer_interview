@@ -12,5 +12,6 @@ describe 'The Word Counting App' do
     parsed_response = JSON.parse(last_response.body)
     expect(parsed_response).to have_key("text")
     expect(parsed_response).to have_key("exclude")
+    expect(parsed_response).to have_key("id")
   end
 end
