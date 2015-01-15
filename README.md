@@ -2,7 +2,7 @@
 
 Problem can be found [here](https://github.com/nnakagaki/platform_engineer_interview/blob/master/problem_statement.md).
 
-## General Setup
+## General Usage
 
 Start the server with the following:
 
@@ -46,4 +46,5 @@ will yield a 200 status response because the answer is correct.
 
 will yield a 400 response because the answer is incorrect.
 
-
+## Word Counter Logic
+The gem [LiterateRandomizer](https://github.com/Imikimi-LLC/literate_randomizer) was used to generate a random word, sentence, or paragraph each with 1/3 chance. Words were counted using a hash where the word pointed to it's frequency. For each problem, an ID was generated and the answer was saved in a hash where the ID pointed to the word-frequency hash from before. When a request is made with an ID in it's params, the ID is looked up in the answer key and the word-frequency hash is compared to the params to see if the answer is correct. Once the ID is looked up, it is deleted so each question may only be answered once.

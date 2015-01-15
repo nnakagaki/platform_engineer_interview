@@ -1,15 +1,22 @@
 require 'sinatra'
 require "sinatra/reloader" if development?
 
+require 'literate_randomizer'
+
 set :counting_test_answer_key, {}
 set :port, 8000
 
 get '/' do
 	if params.keys.length == 0
-	  files = %w(texts/0 texts/1 texts/2 texts/3 texts/4 texts/5)
+	  mode = rand(3)
 
-	  text_file = files.sample
-	  source_text = File.read(text_file).strip
+	  if mode == 0
+	  	source_text = LiterateRandomizer.word
+	  elsif mode == 1
+	  	source_text = LiterateRandomizer.sentence
+	  else
+	  	source_text = LiterateRandomizer.paragraph
+	  end
 
 	  word_counter = WordCounter.new(source_text)
 

@@ -7,4 +7,4 @@ gem "sinatra-contrib"
 gem "json"
 gem "rspec"
 
-# gem "literate_randomizer"
+gem "literate_randomizer"
