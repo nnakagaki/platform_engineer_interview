@@ -9,49 +9,77 @@ get '/' do
 	  files = %w(texts/0 texts/1 texts/2 texts/3 texts/4 texts/5)
 
 	  text_file = files.sample
-	  source_text = File.read(text_file).strip.downcase.gsub(/[^a-z\s]/, "")
-	  text_array = source_text.split
+	  source_text = File.read(text_file).strip
 
-	  word_count = Hash.new(0)
-	  text_array.each do |text|
-	  	word_count[text] += 1
-	  end
-
-	  word_num = word_count.keys.length
-	  if word_num == 1
-	  	exclude_num = 0
-	  else
-	  	exclude_num = rand(word_num - 1) + 1
-	  end
-
-	  exclude = []
-	  exclude_num.times do |i|
-	  	word = word_count.keys[rand(word_count.keys.length)]
-	  	exclude << word
-	  	word_count.delete(word)
-	  end
+	  word_counter = WordCounter.new(source_text)
 
 	  id = Random.new_seed
 	  while settings.counting_test_answer_key[id]
 	  	id = Random.new_seed
 	  end
 
-	  settings.counting_test_answer_key[id] = word_count
+	  settings.counting_test_answer_key[id] = word_counter.word_count
 
-	  # p settings.counting_test_answer_key
-
-	  erb :"get.json", locals: { source_text: source_text, exclude: exclude, id: id }
+	  erb :"get.json", locals: { source_text: source_text, exclude: word_counter.exclude, id: id }
 	else
-		["text", "exclude", "id"].each do |key|
+		["TEXT", "EXCLUDE", "ID"].each do |key|
 			unless params.keys.include?(key)
-				status 400
+				return status 400
 			end
 		end
-		p params["text"]
-	  p params["exclude"]
-	  p params["id"]
-	  unless settings.counting_test_answer_key.keys.include?(params["id"])
-	  	status 400
+
+	  unless settings.counting_test_answer_key.keys.include?(params["ID"].to_i)
+	  	return status 400
+	  end
+
+	  answer_key = settings.counting_test_answer_key[params["ID"].to_i]
+	  settings.counting_test_answer_key.delete(params["ID"].to_i)
+
+	  unless params.keys.length - 3 == answer_key.keys.length
+	  	return status 400
+	  end
+
+	  answer_key.each do |key, val|
+	  	unless params[key].to_i == val
+	  		return status 400
+	  	end
+	  end
+
+	  status 200
+	end
+end
+
+class WordCounter
+	attr_reader :word_count, :exclude
+
+	def initialize(source_text, no_exclusion = false)
+		text_array = source_text.downcase.gsub(/[^a-z\s]/, "").split
+
+		@word_count = Hash.new(0)
+		@exclude = []
+
+		self.count_word(text_array)
+		self.excluder unless no_exclusion
+	end
+
+	def count_word(text_array)
+	  text_array.each do |text|
+	  	@word_count[text] += 1
+	  end
+	end
+
+	def excluder
+		word_num = @word_count.keys.length
+	  if word_num == 1
+	  	exclude_num = 0
+	  else
+	  	exclude_num = rand(word_num - 1) + 1
+	  end
+
+	  exclude_num.times do |i|
+	  	word = @word_count.keys[rand(@word_count.keys.length)]
+	  	@exclude << word
+	  	@word_count.delete(word)
 	  end
 	end
 end
