@@ -16,13 +16,9 @@ Start the server with the following:
 - GET request to `/` without any params will return a json with the format:
 
 		{
-
 			"TEXT": "sample text",
-
-  		"EXCLUDE": ["sample"],
-
-  		"ID": 123456
-
+			"EXCLUDE": ["sample"],
+			"ID": 123456
 		}
 
 - GET request to `/` with params "TEXT", "EXCLUDE", "ID", and { word => frequency } key, value pairs will analyse the answer
