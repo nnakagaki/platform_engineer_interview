@@ -24,3 +24,26 @@ Start the server with the following:
 - GET request to `/` with params "TEXT", "EXCLUDE", "ID", and { word => frequency } key, value pairs will analyse the answer
 - If the answer is correct, the server will respond with a 200 status
 - If the answer is incorrect, or if the required params is missing, the server will respond with a 400 status
+
+For example, if a GET request to `/` returns the above json, a GET request to `/` with the params:
+
+		{
+			"TEXT": "sample text",
+			"EXCLUDE": ["sample"],
+			"ID": 123456,
+			"text": 1
+		}
+
+will yield a 200 status response because the answer is correct.
+
+		{
+			"TEXT": "sample text",
+			"EXCLUDE": ["sample"],
+			"ID": 123456,
+			"text": 1,
+			"sample": 1
+		}
+
+will yield a 400 response because the answer is incorrect.
+
+
