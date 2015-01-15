@@ -5,8 +5,12 @@ Problem can be found [here](https://github.com/nnakagaki/platform_engineer_inter
 ## General Setup
 
 Start the server with the following:
+
+
 	bundle install
+
 	ruby app.rb
+
 
 - The server runs on `localhost:8000`
 - GET request to `/` without any params will return a json with the format:
